@@ -3,8 +3,10 @@
 # Data configs
 data:
   dataroot: ./data/stl10/images/
-  labelroot: ./data/stl10/label/
-  img_size: 32
+  labelroot: 
+    train: ./data/stl10/label/train.csv
+    test: ./data/stl10/label/test.csv
+  img_size: [32, 32]
   n_channels: 3
   classes: ['airplane', 'bird', 'car', 'cat', 'deer', 'dog', 'horse', 'monkey', 'ship', 'truck']
   color_mean: [0.4914, 0.4822, 0.4465]
@@ -26,6 +28,7 @@ train:
 model:
   name: resnet18
   input: [32, 32, 3]
+  n_classes: 10
 
 util:
   logdir: ./logs/

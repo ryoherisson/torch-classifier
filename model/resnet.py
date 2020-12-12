@@ -63,6 +63,7 @@ class ResNet(BaseModel):
 
     def build(self):
         """ Builds model """
+        LOG.info(f'\n Building {self.model_name.upper()}...')
         kwargs = {'num_classes': self.n_classes}
         pretrained = self.config.model.pretrained
 
@@ -79,7 +80,7 @@ class ResNet(BaseModel):
         else:
             raise ValueError('This model name is not supported.')
 
-        LOG.info('\n Model was successfully build.')
+        LOG.info(' Model was successfully build.')
 
     def _set_model_parameters(self):
         """Sets model parameters"""

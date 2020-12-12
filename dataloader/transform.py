@@ -19,12 +19,12 @@ class DataTransform():
         color_std : Tuple
             standard deviation of image channels e.g. (0.2023, 0.1994, 0.2010) 
         mode : String
-            train or test. test for inference version.
+            train or eval. eval for inference version.
 
         Raises
         ------
         ValueError
-            raise value error if the mode is not 'train' or 'test'
+            raise value error if the mode is not 'train' or 'eval'
         """
         if mode == 'train':
             self.transform = transforms.Compose([
@@ -32,7 +32,7 @@ class DataTransform():
                              transforms.ToTensor(),
                              transforms.Normalize(color_mean, color_std)
                              ])
-        elif mode == 'test':
+        elif mode == 'eval':
             self.transform = transforms.Compose([
                              transforms.Resize((img_size, img_size)),
                              transforms.ToTensor(),

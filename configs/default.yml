@@ -5,6 +5,7 @@ data:
   dataroot: ./data/stl10/images/
   labelroot: 
     train: ./data/stl10/label/train.csv
+    val: ./data/stl10/label/test.csv
     test: ./data/stl10/label/test.csv
   img_size: [32, 32]
   n_channels: 3
@@ -14,11 +15,14 @@ data:
 
 train:
   batch_size: 128
-  epoches: 30
+  epochs: 30
   optimizer:
     type: sgd
-  lr: 0.1
-  decay: 1e-4
+    lr: 0.001
+    momentum: 0.9
+    decay: 0.0001
+  criterion:
+    type: cross_entropy
   n_gpus: 1
   metrics: ['accuracy', 'precision', 'recall', 'f1score']
   save_ckpt_interval: 10
@@ -29,6 +33,7 @@ model:
   name: resnet18
   input: [32, 32, 3]
   n_classes: 10
+  pretrained: False
 
 util:
   logdir: ./logs/

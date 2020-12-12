@@ -49,7 +49,7 @@ class DataLoader:
         batch_size : int
             batch_size
         mode : str
-            'train' or 'test'
+            'train' or 'eval'
 
         Returns
         -------
@@ -59,7 +59,7 @@ class DataLoader:
         Raises
         ------
         ValueError
-            raise value error if the mode is not 'train' or 'test'
+            raise value error if the mode is not 'train' or 'eval'
         """
         # transform
         resize = (data_config.img_size[0], data_config.img_size[1])
@@ -73,7 +73,7 @@ class DataLoader:
         # dataloader
         if mode == 'train':
             return data.DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=4)
-        elif mode == 'test':
+        elif mode == 'eval':
             return data.DataLoader(dataset, batch_size=batch_size, shuffle=False, num_workers=4)
         else:
-            raise ValueError('the mode should be train or test. this mode is not supported')
+            raise ValueError('the mode should be train or eval. this mode is not supported')

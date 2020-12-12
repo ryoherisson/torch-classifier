@@ -8,7 +8,7 @@
 
 # def parser():
 #     parser = argparse.ArgumentParser()
-#     parser.add_argument('--infer', action='store_true', help='inference mode')
+#     parser.add_argument('--eval', action='store_true', help='eval mode')
 #     args = parser.parse_args()
 #     return args
 
@@ -18,7 +18,7 @@
 #     model.load_data()
 #     model.build()
     
-#     if args.infer:
+#     if args.eval:
 #         model.evaluate()
 #     else:
 #         model.train()

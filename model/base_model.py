@@ -10,7 +10,7 @@ class BaseModel(ABC):
     """Abstract Model class that is inherited to all models"""
 
     def __init__(self, cfg: Dict):
-        config = Config.from_json(cfg)
+        self.config = Config.from_json(cfg)
 
     @abstractmethod
     def load_data(self):

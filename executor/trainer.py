@@ -36,12 +36,15 @@ class Trainer:
                     self.optimizer.step()
                     self.optimizer.zero_grad()
 
-                    # self.metrics.update
+                    pred = outputs.argmax(axis=1)
+                    self.metrics.update(preds=preds.cpu().detach().clone(),
+                                        targets=targets.cpu().detach().clone(),
+                                        loss=loss.item())
 
                     pbar.set_description(f'train epoch:{epoch}')
 
-            # self.metric.result()
-            # self.metrics.reset_states()
+            self.metric.result()
+            self.metric.reset_states()
 
             # eval
             self.eval(epoch)
@@ -68,15 +71,24 @@ class Trainer:
                     loss = self.criterion(outputs, targets)
                     self.optimizer.zero_grad()
     
-                    pbar.set_description(f'eval epoch: {epoch}')
+                    self.metrics.update(preds=preds.cpu().detach().clone(),
+                                        targets=targets.cpu().detach().clone(),
+                                        loss=loss.item())
 
-                    # self.metrics.update()
-        
+                    pbar.set_description(f'eval epoch: {epoch}')
+    
         # self.metric.result()
-        # self.metrics.reset_states()
+        # self.metric.reset_states()
 
     # def _write_summary(self, epoch, loss):
-    #     pass
+        # Change mode from 'test' to 'val' to change the display order from left to right to train and test.
+        # mode = 'val' if mode == 'test' else mode
+
+        # self.writer.add_scalar(f'loss/{mode}', self.loss, epoch)
+        # self.writer.add_scalar(f'accuracy/{mode}', self.accuracy, epoch)
+        # self.writer.add_scalar(f'mean_f1score/{mode}', self.f1score.mean(), epoch)
+        # self.writer.add_scalar(f'precision/{mode}', self.precision.mean(), epoch)
+        # self.writer.add_scalar(f'recall/{mode}', self.recall.mean(), epoch)
 
     # def _save_ckpt(self, epoch, loss, mode=None, zfill=4):
     #     if isinstance(self.model, nn.DataParallel):

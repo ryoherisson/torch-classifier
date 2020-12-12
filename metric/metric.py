@@ -2,6 +2,7 @@
 """Metrics Class"""
 from typing import List
 
+import csv
 from pathlib import Path
 
 import numpy as np
@@ -9,8 +10,10 @@ import pandas as pd
 
 import torch
 
+from utils.logger import get_logger
 from metric.cmx import plot_cmx
 
+LOG = get_logger(__name__)
 pd.set_option('display.unicode.east_asian_width', True)
 
 class Metric:
@@ -32,30 +35,32 @@ class Metric:
 
         self.loss_list.append(loss)
         
-    def result(self, epoch: int, mode: str = 'train', eval: bool = False):
-        # precision, recall, f1score
+    def result(self, epoch: int, mode: str):
+        """Metric(acc, loss, precision, recall, f1score), Logging, Save and Plot CMX
+        
+        Parameters
+        ----------
+        epoch : int
+            current epoch
+        mode : str
+            'train' or 'eval'
+        """
         tp = torch.diag(self.cmx).to(torch.float32)
         fp = (self.cmx.sum(axis=1) - torch.diag(self.cmx)).to(torch.float32)
         fn = (self.cmx.sum(axis=0) - torch.diag(self.cmx)).to(torch.float32)
+
+        self.acc = (100.0 * torch.sum(tp) / torch.sum(self.cmx)).item()
+        self.loss = mean(self.loss_list).item()
 
         self.precision = tp / (tp + fp + self.eps)
         self.recall = tp / (tp + fn + self.eps)
         self.f1score = tp / (tp + 0.5 * (fp + fn) + self.eps) # micro f1score
 
-        # accuracy
-        self.acc = (100.0 * tp / torch.sum(self.cmx)).item()
-
-        # loss
-        self.loss = mean(self.loss_list).item()
-
-        # logging
         self._logging(epoch, mode)
-
-        # save csv
         self._save_csv(epoch, mode)
 
         # plot confusion matrix
-        if eval:
+        if mode == 'eval':
             cmx_path = self.metric_dir / 'test_cmx.png'
             plot_cmx(self.cmx.clone().numpy(), self.classes, self.cmx_path)
 
@@ -63,27 +68,21 @@ class Metric:
         self.loss_list = []
         self.cmx = torch.zeros(self.n_classes, self.n_classes, dtype=torch.int64)
 
-    def _logging(self, epoch, mode):
-        pass
-    #     logger.info(f'{mode} metrics...')
-    #     logger.info(f'loss:         {self.loss}')
-    #     logger.info(f'accuracy:     {self.accuracy}')
+    def _logging(self, epoch: int, mode: str):
+        """Logging"""
+        LOG.info(f'{mode} metrics...')
+        LOG.info(f'loss:         {self.loss}')
+        LOG.info(f'accuracy:     {self.accuracy}')
 
-    #     df = pd.DataFrame(index=self.classes)
-    #     df['precision'] = self.precision.tolist()
-    #     df['recall'] = self.recall.tolist()
-    #     df['f1score'] = self.f1score.tolist()
+        df = pd.DataFrame(index=self.classes)
+        df['precision'] = self.precision.tolist()
+        df['recall'] = self.recall.tolist()
+        df['f1score'] = self.f1score.tolist()
 
-    #     logger.info(f'\nmetrics values per classes: \n{df}\n')
-
-    #     logger.info(f'precision:    {self.precision.mean()}')
-    #     logger.info(f'recall:       {self.recall.mean()}')
-    #     logger.info(f'mean_f1score: {self.f1score.mean()}\n') # micro mean f1score
-
-            # plot confusion matrix
-            # if eval:
-            #     cmx_path = Path(self.metric_dir) / 'test_cmx.png'
-            #     plot_cmx(self.cmx.clone().numpy(), self.classes, self.cmx_path)
+        LOG.info(f'\nmetrics values per classes: \n{df}\n')
+        LOG.info(f'precision:    {self.precision.mean()}')
+        LOG.info(f'recall:       {self.recall.mean()}')
+        LOG.info(f'mean_f1score: {self.f1score.mean()}\n') # micro mean f1score
 
     def _save_csv(self, epoch: int, mode: str):
         """Save results to csv"""

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 """Make Criterion"""
-
 import torch.nn as nn
 
 def make_criterion(criterion_cfg: object):

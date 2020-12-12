@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """ResNet18 model"""
-
-import torch
 from torchvision.models as models
 
+from utils.paths import Paths
+from utils.logger import setup_logger, get_logger
 from dataloader import DataLoader
 from metric import Metric
 
@@ -13,6 +13,7 @@ from .common.criterion import make_criterion
 from .common.optimizer import make_optimizer
 from .common.ckpt import load_ckpt
 
+LOG = get_logger(__name__)
 
 class ResNet(BaseModel):
     """ResNet Model Class"""
@@ -25,27 +26,36 @@ class ResNet(BaseModel):
         self.batch_size = self.config.train.batch_size
         self.n_gpus = self.config.train.n_gpus
         self.resume = self.config.train.resume
-        self.metrics_dir = None
 
         # dataloader
         self.trainloader = None
         self.valloader = None
         self.testloader = None
 
+        # paths
+        self.paths = Paths.make_dirs(self.config)
+    
+        # setup logger
+        setup_logger(str(paths.logdir / 'info.log'))
+
     def load_data(self, eval: bool):
         """Loads and Preprocess data"""
+        LOG.info(f'\nLoading {self.config.data.dataroot} dataset...')
         # train
         if not eval:
             # train data
+            LOG.info(f'Train data...')
             self.train_img_list, self.train_lbl_list = DataLoader().load_data(self.config.data.dataroot, self.config.data.labelroot.train)
             self.trainloader = DataLoader().preprocess_data(data_config, self.train_img_list, self.train_lbl_list, self.batch_size, 'train')
 
             # val data
+            LOG.info(f'Validation data...')
             self.val_img_list, self.val_lbl_list = DataLoader().load_data(self.config.data.dataroot, self.config.data.labelroot.val)
             self.valloader = DataLoader().preprocess_data(data_config, self.val_img_list, self.val_lbl_list, self.batch_size, 'eval')
         
         # evaluation
         if eval:
+            LOG.info(f'Test data...')
             self.test_img_list, self.test_lbl_list = DataLoader().load_data(self.config.data.dataroot, self.config.data.labelroot.test)
             self.testloader = DataLoader().preprocess_data(data_config, self.test_img_list, self.test_lbl_list, self.batch_size, 'eval')
 
@@ -67,6 +77,8 @@ class ResNet(BaseModel):
         else:
             raise ValueError('This model name is not supported.')
 
+        LOG.info('\n Model was successfully build.')
+
     def _set_model_parameters(self):
         """Sets model parameters"""
         # CPU or GPU(single, multi)
@@ -84,6 +96,7 @@ class ResNet(BaseModel):
 
     def train(self):
         """Compiles and trains the model"""
+        LOG.info('\n Training started.')
         self._set_model_parameters()
         self._set_training_parameters()
         
@@ -91,7 +104,7 @@ class ResNet(BaseModel):
         if self.resume:
             self.model = load_ckpt(self.model, self.resume)            
 
-        self.metrics = Metric(self.n_classes, self.classes, self.metric_dir)
+        self.metrics = Metric(self.n_classes, self.classes, self.paths.metric_dir)
 
         train_parameters = {
             'device': self.device,
@@ -102,6 +115,8 @@ class ResNet(BaseModel):
             'criterion': self.criterion,
             'metrics': self.metrics,
             'save_ckpt_interval': self.save_ckpt_interval,
+            'ckpt_dir': self.paths.ckpt_dir,
+            'summary_dir': self.paths.summary_dir,
         }
 
         trainer = Trainer(**self.train_parameters)
@@ -109,13 +124,15 @@ class ResNet(BaseModel):
 
     def evaluate(self):
         """Predicts resuts for the test dataset"""
+        LOG.info('\n Prediction started...')
+
         self._set_model_parameters()
 
         # load checkpoint
         if self.resume:
             self.model = load_ckpt(self.model, self.resume)            
 
-        self.metrics = Metric(self.n_classes, self.classes, self.metric_dir)
+        self.metrics = Metric(self.n_classes, self.classes, self.paths.metric_dir)
 
         eval_parameters = {
             'device': self.device,
@@ -126,6 +143,8 @@ class ResNet(BaseModel):
             'criterion': None,
             'metrics': self.metrics,
             'save_ckpt_interval': None,
+            'ckpt_dir': self.paths.ckpt_dir,
+            'summary_dir': self.paths.summary_dir,
         }
 
         trainer = Trainer(**self.eval_parameters)

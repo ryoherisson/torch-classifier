@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+"""loading config file"""
+
 import yaml
 
 def load_yaml(cfg_path: str):

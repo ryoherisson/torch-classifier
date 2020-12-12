@@ -1,0 +1,33 @@
+# Model config
+ 
+# Data configs
+data:
+  dataroot: ./data/stl10/images/
+  labelroot: ./data/stl10/label/
+  img_size: 32
+  n_channels: 3
+  classes: ['airplane', 'bird', 'car', 'cat', 'deer', 'dog', 'horse', 'monkey', 'ship', 'truck']
+  color_mean: [0.4914, 0.4822, 0.4465]
+  color_std: [0.2023, 0.1994, 0.2010]
+  load_with_info: True
+
+train:
+  batch_size: 128
+  epoches: 30
+  optimizer:
+    type: sgd
+  lr: 0.1
+  decay: 1e-4
+  n_gpus: 1
+  metrics: ['accuracy', 'precision', 'recall', 'f1score']
+  save_ckpt_interval: 10
+  resume:
+    # e.g) resume: ./logs/2020-07-26T00:19:34.918002/ckpt/best_acc_ckpt.pth if resume. Blank if not resume
+
+model:
+  name: resnet18
+  input: [32, 32, 3]
+
+util:
+  logdir: ./logs/
+

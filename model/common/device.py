@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Set Device"""
+"""Setup Device"""
 
 import torch
 
@@ -11,3 +11,7 @@ def setup_device(n_gpus: int):
     else:
         # logger.info('using CPU...\n')
         return torch.device('cpu')
+
+def data_parallel(model: object, n_gpus: int):
+    """DataParallel"""
+    return torch.nn.DataParallel(model)

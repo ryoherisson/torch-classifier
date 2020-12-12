@@ -7,9 +7,10 @@ from torchvision.models as models
 from dataloader import DataLoader
 
 from .base_model import BaseModel
-from .common.device import setup_device
+from .common.device import setup_device, data_parallel
 from .common.criterion import make_criterion
 from .common.optimizer import make_optimizer
+from .common.ckpt import load_ckpt
 
 
 class ResNet(BaseModel):
@@ -50,19 +51,28 @@ class ResNet(BaseModel):
     def build(self):
         """ Builds model """
         kwargs = {'num_classes': self.n_classes}
+        pretrained = self.config.model.pretrained
 
         if self.model_name == 'resnet18':
-            self.model = models.resnet18(pretrained=False, **kwargs)
+            self.model = models.resnet18(pretrained=pretrained, **kwargs)
         elif self.model_name == 'resnet34':
-            self.model = models.resnet34(pretrained=False, **kwargs)
+            self.model = models.resnet34(pretrained=pretrained, **kwargs)
         elif self.model_name == 'resnet50':
-            self.model = models.resnet50(pretrained=False, **kwargs)
+            self.model = models.resnet50(pretrained=pretrained, **kwargs)
         elif self.model_name == 'resnet101':
-            self.model = models.resnet101(pretrained=False, **kwargs)
+            self.model = models.resnet101(pretrained=pretrained, **kwargs)
         elif self.model_name == 'resnet152':
-            self.model = models.resnet152(pretrained=False, **kwargs)
+            self.model = models.resnet152(pretrained=pretrained, **kwargs)
         else:
             raise ValueError('This model name is not supported.')
+
+    def _set_model_parameters(self):
+        """Sets model parameters"""
+        # CPU or GPU(single, multi)
+        self.device = setup_device(self.n_gpus)
+        self.model = self.model.to(self.device)
+        if self.n_gpus > 1:
+            self.model = data_parallel(self.model)
 
     def _set_training_parameters(self):
         """Sets training parameters"""
@@ -70,11 +80,16 @@ class ResNet(BaseModel):
         self.save_ckpt_interval = self.config.train.save_ckpt_interval
         self.optimizer = make_optimizer(self.model, self.config.train.optimizer)
         self.criterion = make_criterion(self.config.train.criterion)
-        
+
     def train(self):
         """Compiles and trains the model"""
-        self.device = setup_device(self.n_gpus)
+        self._set_model_parameters()
         self._set_training_parameters()
+        
+        # load checkpoint
+        if self.resume:
+            self.model = load_ckpt(self.model, self.resume)            
+
         self.metrics = None
 
         train_parameters = {
@@ -88,18 +103,23 @@ class ResNet(BaseModel):
             'save_ckpt_interval': self.save_ckpt_interval,
         }
 
-        # trainer = Trainer(**self.train_parameters)
-        # trainer.train()
+        trainer = Trainer(**self.train_parameters)
+        trainer.train()
 
     def evaluate(self):
         """Predicts resuts for the test dataset"""
-        self.device = setup_device(self.n_gpus)
+        self._set_model_parameters()
+
+        # load checkpoint
+        if self.resume:
+            self.model = load_ckpt(self.model, self.resume)            
+
         self.metrics = None
 
         eval_parameters = {
             'device': self.device,
             'model': self.model,
-            'data_loaders': (self.trainloader, self.testloader),
+            'dataloaders': (self.trainloader, self.testloader),
             'epochs': None,
             'optimizer': None,
             'criterion': None,
@@ -107,5 +127,5 @@ class ResNet(BaseModel):
             'save_ckpt_interval': None,
         }
 
-        # trainer = Trainer(**self.eval_parameters)
-        # trainer.eval()
+        trainer = Trainer(**self.eval_parameters)
+        trainer.eval()

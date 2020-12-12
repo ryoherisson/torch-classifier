@@ -59,7 +59,7 @@ class DataLoader:
         Raises
         ------
         ValueError
-            [description]
+            raise value error if the mode is not 'train' or 'test'
         """
         # transform
         resize = (data_config.img_size[0], data_config.img_size[1])

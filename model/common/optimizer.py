@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 """Make Optimizer"""
-
 import torch.optim as optim
 
 def make_optimizer(model: object, optimizer_cfg: object):

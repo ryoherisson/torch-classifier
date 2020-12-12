@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 """Setup Device"""
-
 import torch
 
 def setup_device(n_gpus: int):

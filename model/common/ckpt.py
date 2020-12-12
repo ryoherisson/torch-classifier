@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 """Load model checkpoint"""
-
 from pathlib import Path
 
 import torch

@@ -1,6 +1,5 @@
 # -*- cofing: utf-8 -*-
 """ main.py """
-
 # import argparse
 
 # from configs.config import CFG

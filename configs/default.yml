@@ -9,7 +9,6 @@ data:
   classes: ['airplane', 'bird', 'car', 'cat', 'deer', 'dog', 'horse', 'monkey', 'ship', 'truck']
   color_mean: [0.4914, 0.4822, 0.4465]
   color_std: [0.2023, 0.1994, 0.2010]
-  load_with_info: True
 
 train:
   batch_size: 128

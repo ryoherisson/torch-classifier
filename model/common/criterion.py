@@ -11,4 +11,4 @@ def make_criterion(criterion_cfg: object):
         LOG.info('\n Criterion: Cross Entropy Loss')
         return nn.CrossEntropyLoss()
     else:
-        raise ValueError('This loss function is not supported.')
+        raise NotImplementedError('This loss function is not supported.')

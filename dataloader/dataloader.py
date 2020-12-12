@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from torch.utils.data as data
+import torch.utils.data as data
 
 from dataloader.utils import make_data_list
 from dataloader.dataset import Dataset
@@ -64,7 +64,7 @@ class DataLoader:
         # transform
         resize = (data_config.img_size[0], data_config.img_size[1])
         color_mean = tuple(data_config.color_mean)
-        color_std = tuple(data_config.std)
+        color_std = tuple(data_config.color_std)
         transform = DataTransform(resize, color_mean, color_std, mode)
 
         # dataset

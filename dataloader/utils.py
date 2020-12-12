@@ -26,10 +26,10 @@ def make_data_list(dataroot: str, labelroot: str):
     df = pd.read_csv(labelroot)
     
     # image path list
-    filename_list = df['images'].values.tolist()
+    filename_list = df['image'].values.tolist()
     img_list = [Path(dataroot) / filename for filename in filename_list]
 
     # label list
-    lbl_list = df['labels']astype('int').values.tolist()
+    lbl_list = df['label'].astype('int').values.tolist()
 
     return (img_list, lbl_list)

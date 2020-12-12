@@ -4,6 +4,7 @@ from typing import List
 
 import csv
 from pathlib import Path
+from statistics import mean
 
 import numpy as np
 import pandas as pd
@@ -50,7 +51,7 @@ class Metric:
         fn = (self.cmx.sum(axis=0) - torch.diag(self.cmx)).to(torch.float32)
 
         self.acc = (100.0 * torch.sum(tp) / torch.sum(self.cmx)).item()
-        self.loss = mean(self.loss_list).item()
+        self.loss = mean(self.loss_list)
 
         self.precision = tp / (tp + fp + self.eps)
         self.recall = tp / (tp + fn + self.eps)
@@ -62,7 +63,7 @@ class Metric:
         # plot confusion matrix
         if mode == 'eval':
             cmx_path = self.metric_dir / 'test_cmx.png'
-            plot_cmx(self.cmx.clone().numpy(), self.classes, self.cmx_path)
+            plot_cmx(self.cmx.clone().numpy(), self.classes, cmx_path)
 
     def reset_states(self):
         self.loss_list = []
@@ -72,7 +73,7 @@ class Metric:
         """Logging"""
         LOG.info(f'{mode} metrics...')
         LOG.info(f'loss:         {self.loss}')
-        LOG.info(f'accuracy:     {self.accuracy}')
+        LOG.info(f'accuracy:     {self.acc}')
 
         df = pd.DataFrame(index=self.classes)
         df['precision'] = self.precision.tolist()
@@ -86,7 +87,7 @@ class Metric:
 
     def _save_csv(self, epoch: int, mode: str):
         """Save results to csv"""
-        csv_path = self.metrics_dir / f'{mode}_metrics.csv'
+        csv_path = self.metric_dir / f'{mode}_metrics.csv'
 
         if not csv_path.exists():
             with open(csv_path, 'w') as logfile:
@@ -96,5 +97,5 @@ class Metric:
 
         with open(csv_path, 'a') as logfile:
             logwriter = csv.writer(logfile, delimiter=',')
-            logwriter.writerow([epoch, self.loss, self.accuracy, 
+            logwriter.writerow([epoch, self.loss, self.acc, 
                                 self.precision.mean().item(), self.recall.mean().item(), self.f1score.mean().item()])

@@ -6,7 +6,7 @@ from pathlib import Path
 class Paths:
     """Paths class which contains logidr, summary_dir, ckpt_dir, metric_dir"""
     
-    def __init__(self, logidr, summary_dir, ckpt_dir, metric_dir):
+    def __init__(self, logdir, summary_dir, ckpt_dir, metric_dir):
         self.logdir = logdir
         self.summary_dir = summary_dir
         self.ckpt_dir = ckpt_dir
@@ -29,7 +29,7 @@ class Paths:
         now = datetime.now().isoformat()
 
         # log parent directory
-        logdir = Path(config.util.logdir) / now
+        logdir = Path(logdir) / now
         logdir.mkdir(exist_ok=True, parents=True)
 
         # summary directory
@@ -44,7 +44,7 @@ class Paths:
         metric_dir = logdir / 'metric'
         metric_dir.mkdir(exist_ok=True)
 
-        return cls(logidr, summary_dir, ckpt_dir, metric_dir)
+        return cls(logdir, summary_dir, ckpt_dir, metric_dir)
 
 
         

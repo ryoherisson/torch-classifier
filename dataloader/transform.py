@@ -34,7 +34,7 @@ class DataTransform():
                              ])
         elif mode == 'eval':
             self.transform = transforms.Compose([
-                             transforms.Resize((img_size, img_size)),
+                             transforms.Resize(resize),
                              transforms.ToTensor(),
                              transforms.Normalize(color_mean, color_std)
                              ])

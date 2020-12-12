@@ -39,5 +39,5 @@ def get_logger(name: str):
     name : str
         name of logger
     """
-    logger = logging.getLogger(name)
+    logger = getLogger(name)
     return logger

@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 """ResNet18 model"""
-from torchvision.models as models
+import torchvision.models as models
 
 from utils.paths import Paths
 from utils.logger import setup_logger, get_logger
 from dataloader import DataLoader
 from metric import Metric
+from executor.trainer import Trainer
 
 from .base_model import BaseModel
 from .common.device import setup_device, data_parallel
@@ -23,6 +24,7 @@ class ResNet(BaseModel):
         self.model = None
         self.model_name = self.config.model.name
         self.n_classes = self.config.model.n_classes
+        self.classes = self.config.data.classes
         self.batch_size = self.config.train.batch_size
         self.n_gpus = self.config.train.n_gpus
         self.resume = self.config.train.resume
@@ -33,10 +35,10 @@ class ResNet(BaseModel):
         self.testloader = None
 
         # paths
-        self.paths = Paths.make_dirs(self.config)
+        self.paths = Paths.make_dirs(self.config.util.logdir)
     
         # setup logger
-        setup_logger(str(paths.logdir / 'info.log'))
+        setup_logger(str(self.paths.logdir / 'info.log'))
 
     def load_data(self, eval: bool):
         """Loads and Preprocess data"""
@@ -44,20 +46,20 @@ class ResNet(BaseModel):
         # train
         if not eval:
             # train data
-            LOG.info(f'Train data...')
+            LOG.info(f' Train data...')
             self.train_img_list, self.train_lbl_list = DataLoader().load_data(self.config.data.dataroot, self.config.data.labelroot.train)
-            self.trainloader = DataLoader().preprocess_data(data_config, self.train_img_list, self.train_lbl_list, self.batch_size, 'train')
+            self.trainloader = DataLoader().preprocess_data(self.config.data, self.train_img_list, self.train_lbl_list, self.batch_size, 'train')
 
             # val data
-            LOG.info(f'Validation data...')
+            LOG.info(f' Validation data...')
             self.val_img_list, self.val_lbl_list = DataLoader().load_data(self.config.data.dataroot, self.config.data.labelroot.val)
-            self.valloader = DataLoader().preprocess_data(data_config, self.val_img_list, self.val_lbl_list, self.batch_size, 'eval')
+            self.valloader = DataLoader().preprocess_data(self.config.data, self.val_img_list, self.val_lbl_list, self.batch_size, 'eval')
         
         # evaluation
         if eval:
-            LOG.info(f'Test data...')
+            LOG.info(f' Test data...')
             self.test_img_list, self.test_lbl_list = DataLoader().load_data(self.config.data.dataroot, self.config.data.labelroot.test)
-            self.testloader = DataLoader().preprocess_data(data_config, self.test_img_list, self.test_lbl_list, self.batch_size, 'eval')
+            self.testloader = DataLoader().preprocess_data(self.config.data, self.test_img_list, self.test_lbl_list, self.batch_size, 'eval')
 
     def build(self):
         """ Builds model """
@@ -102,6 +104,7 @@ class ResNet(BaseModel):
         
         # load checkpoint
         if self.resume:
+            LOG.info('\n Loading checkpoint...')
             self.model = load_ckpt(self.model, self.resume)            
 
         self.metrics = Metric(self.n_classes, self.classes, self.paths.metric_dir)
@@ -109,7 +112,7 @@ class ResNet(BaseModel):
         train_parameters = {
             'device': self.device,
             'model': self.model,
-            'data_loaders': (self.trainloader, self.valloader),
+            'dataloaders': (self.trainloader, self.valloader),
             'epochs': self.epochs,
             'optimizer': self.optimizer,
             'criterion': self.criterion,
@@ -119,7 +122,7 @@ class ResNet(BaseModel):
             'summary_dir': self.paths.summary_dir,
         }
 
-        trainer = Trainer(**self.train_parameters)
+        trainer = Trainer(**train_parameters)
         trainer.train()
 
     def evaluate(self):
@@ -147,5 +150,5 @@ class ResNet(BaseModel):
             'summary_dir': self.paths.summary_dir,
         }
 
-        trainer = Trainer(**self.eval_parameters)
+        trainer = Trainer(**eval_parameters)
         trainer.eval()

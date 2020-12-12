@@ -5,6 +5,7 @@ import torch
 from torchvision.models as models
 
 from dataloader import DataLoader
+from metric import Metric
 
 from .base_model import BaseModel
 from .common.device import setup_device, data_parallel
@@ -24,7 +25,7 @@ class ResNet(BaseModel):
         self.batch_size = self.config.train.batch_size
         self.n_gpus = self.config.train.n_gpus
         self.resume = self.config.train.resume
-        self.metrics = None
+        self.metrics_dir = None
 
         # dataloader
         self.trainloader = None
@@ -90,7 +91,7 @@ class ResNet(BaseModel):
         if self.resume:
             self.model = load_ckpt(self.model, self.resume)            
 
-        self.metrics = None
+        self.metrics = Metric(self.n_classes, self.classes, self.metric_dir)
 
         train_parameters = {
             'device': self.device,
@@ -114,7 +115,7 @@ class ResNet(BaseModel):
         if self.resume:
             self.model = load_ckpt(self.model, self.resume)            
 
-        self.metrics = None
+        self.metrics = Metric(self.n_classes, self.classes, self.metric_dir)
 
         eval_parameters = {
             'device': self.device,

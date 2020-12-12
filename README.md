@@ -1,2 +1,2 @@
 # classification-pytorch
-Classification pytorch
+Classification in pytorch

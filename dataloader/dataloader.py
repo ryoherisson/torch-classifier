@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """DataLoader class"""
 from typing import List
 from pathlib import Path

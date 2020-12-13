@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Make Criterion"""
 import torch.nn as nn
 

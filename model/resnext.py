@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """ResNext model"""
 import torch.nn as nn
 import torchvision.models as models

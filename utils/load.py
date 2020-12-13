@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-"""loading config file"""
+"""Loading config file"""
 
 import yaml
 

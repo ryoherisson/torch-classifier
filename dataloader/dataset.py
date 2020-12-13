@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Dataset class"""
 from typing import List
 

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """DataTransform class"""
 
 from typing import Tuple

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Path Configs"""
 from datetime import datetime
 from pathlib import Path

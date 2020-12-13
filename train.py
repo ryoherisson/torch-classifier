@@ -1,4 +1,3 @@
-# -*- cofing: utf-8 -*-
 """ main.py """
 import argparse
 

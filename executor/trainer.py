@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Trainer Class"""
 from pathlib import Path
 from tqdm import tqdm

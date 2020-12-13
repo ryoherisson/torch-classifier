@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Supported models in json format"""
 
 SUPPORTED_MODEL = {

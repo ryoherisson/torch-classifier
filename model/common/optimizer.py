@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Make Optimizer"""
 import torch.optim as optim
 import adabound

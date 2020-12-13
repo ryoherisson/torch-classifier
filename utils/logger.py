@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Logger"""
 import sys
 from logging import INFO, DEBUG, FileHandler

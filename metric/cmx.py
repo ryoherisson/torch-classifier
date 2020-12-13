@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Plot Confusion Matrix"""
 
 from typing import List

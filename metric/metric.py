@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Metrics Class"""
 from typing import List
 

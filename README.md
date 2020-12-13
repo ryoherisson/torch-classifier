@@ -10,14 +10,14 @@ You can use the models from the list belows:
 ## Installation
 1. Install docker. See [Install Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu/).
 
-2. Install pytorch-classifier
+2. Install torch-classifier
 ```bash
-git clone https://github.com/ryoherisson/classification-pytorch.git
+git clone https://github.com/ryoherisson/torch-classifier.git
 ```
 
 3. Build docker image
 ```bash
-cd pytorch-classifier
+cd torch-classifier
 docker build \ 
     --build-arg USER_ID=$(id -u) \
     --build-arg GROUP_ID=$(id -g) \
@@ -28,7 +28,7 @@ docker build \
 
 4. Run docker container
 ```bash
-docker run -it --gpus {your-device} -v /home/{user}/pytorch-classifier:/workspace -p {outer-port}:{inner-port} --name {container-name} {your-image-name}
+docker run -it --gpus {your-device} -v /home/{user}/torch-classifier:/workspace -p {outer-port}:{inner-port} --name {container-name} {your-image-name}
 ```
 
 5. Install packages

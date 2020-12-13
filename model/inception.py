@@ -30,7 +30,7 @@ class Inception(BaseModel):
         self.classes = self.config.data.classes
         self.batch_size = self.config.train.batch_size
         self.n_gpus = self.config.train.n_gpus
-        self.resume = self.config.train.resume
+        self.resume = self.config.model.resume
 
         # dataloader
         self.trainloader = None
@@ -81,18 +81,18 @@ class Inception(BaseModel):
             ckpt = load_ckpt(self.resume)
             self.model.load_state_dict(ckpt['model_state_dict'])
 
-        # CPU or GPU(single, multi)
-        self.device = setup_device(self.n_gpus)
-        self.model = self.model.to(self.device)
-        if self.n_gpus >= 2:
-            self.model = data_parallel(self.model)
-
         LOG.info(' Model was successfully build.')
 
     def _set_training_parameters(self):
         """Sets training parameters"""
         self.epochs = self.config.train.epochs
         self.save_ckpt_interval = self.config.train.save_ckpt_interval
+
+        # CPU or GPU(single, multi)
+        self.device = setup_device(self.n_gpus)
+        self.model = self.model.to(self.device)
+        if self.n_gpus >= 2:
+            self.model = data_parallel(self.model)
 
         # optimizer and criterion
         self.optimizer = make_optimizer(self.model, self.config.train.optimizer)
@@ -134,7 +134,7 @@ class Inception(BaseModel):
             'epochs': None,
             'optimizer': self.optimizer,
             'criterion': self.criterion,
-            'metrics': self.metrics,
+            'metrics': self.metric,
             'save_ckpt_interval': None,
             'ckpt_dir': self.paths.ckpt_dir,
             'summary_dir': self.paths.summary_dir,

@@ -1,4 +1,4 @@
-""" main.py """
+""" train.py """
 import argparse
 
 from utils.load import load_yaml

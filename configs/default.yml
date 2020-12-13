@@ -4,9 +4,9 @@
 data:
   dataroot: ./data/sample/images/
   labelroot: 
-    train: ./data/sample/label/train.csv
-    val: ./data/sample/label/test.csv
-    test: ./data/sample/label/test.csv
+    train: ./data/sample/labels/train.csv
+    val: ./data/sample/labels/test.csv
+    test: ./data/sample/labels/test.csv
   img_size: [32, 32]
   n_channels: 3
   classes: ['airplane', 'bird', 'car', 'cat', 'deer', 'dog', 'horse', 'monkey', 'ship', 'truck']
@@ -39,4 +39,3 @@ model:
 # Other Configs
 util:
   logdir: ./logs/
-

@@ -87,7 +87,7 @@ class Metric:
 
     def _save_csv(self, epoch: int, mode: str):
         """Save results to csv"""
-        csv_path = self.metric_dir / f'{mode}_metrics.csv'
+        csv_path = self.metric_dir / f'{mode}_metric.csv'
 
         if not csv_path.exists():
             with open(csv_path, 'w') as logfile:

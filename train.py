@@ -3,7 +3,7 @@
 import argparse
 
 from utils.load import load_yaml
-from model import ResNet, VGG, Inception, MobileNet, ResNext
+from model import get_model
 
 def parser():
     parser = argparse.ArgumentParser('Classification Argument')
@@ -16,7 +16,7 @@ def run(args):
     """Builds model, loads data, trains and evaluates"""
     config = load_yaml(args.configfile)
 
-    model = ResNet(config)
+    model = get_model(config)
     model.load_data(args.eval)
     model.build()
     

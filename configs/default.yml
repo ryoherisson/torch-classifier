@@ -1,5 +1,5 @@
-# Model Config
- 
+### Configs ###
+
 # Data Configs
 data:
   dataroot: ./data/sample/images/

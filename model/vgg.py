@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""ResNet model"""
+"""VGG model"""
 import torchvision.models as models
 
 from utils.paths import Paths
@@ -16,8 +16,8 @@ from .common.ckpt import load_ckpt
 
 LOG = get_logger(__name__)
 
-class ResNet(BaseModel):
-    """ResNet Model Class"""
+class VGG(BaseModel):
+    """VGG Model Class"""
 
     def __init__(self, config):
         super().__init__(config)
@@ -67,16 +67,14 @@ class ResNet(BaseModel):
         kwargs = {'num_classes': self.n_classes}
         pretrained = self.config.model.pretrained
 
-        if self.model_name == 'resnet18':
-            self.model = models.resnet18(pretrained=pretrained, **kwargs)
-        elif self.model_name == 'resnet34':
-            self.model = models.resnet34(pretrained=pretrained, **kwargs)
-        elif self.model_name == 'resnet50':
-            self.model = models.resnet50(pretrained=pretrained, **kwargs)
-        elif self.model_name == 'resnet101':
-            self.model = models.resnet101(pretrained=pretrained, **kwargs)
-        elif self.model_name == 'resnet152':
-            self.model = models.resnet152(pretrained=pretrained, **kwargs)
+        if self.model_name == 'vgg11':
+            self.model = models.vgg11(pretrained=pretrained, **kwargs)
+        elif self.model_name == 'vgg13':
+            self.model = models.vgg13(pretrained=pretrained, **kwargs)
+        elif self.model_name == 'vgg16':
+            self.model = models.vgg16(pretrained=pretrained, **kwargs)
+        elif self.model_name == 'vgg19':
+            self.model = models.vgg19(pretrained=pretrained, **kwargs)
         else:
             raise ValueError('This model name is not supported.')
 

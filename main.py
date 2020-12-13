@@ -3,7 +3,7 @@
 import argparse
 
 from utils.load import load_yaml
-from model.resnet import ResNet
+from model import ResNet, VGG
 
 def parser():
     parser = argparse.ArgumentParser('Classification Argument')

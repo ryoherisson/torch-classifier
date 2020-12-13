@@ -33,7 +33,6 @@ train:
 # Model Configs
 model:
   name: resnet18
-  input: [32, 32, 3]
   n_classes: 10
   pretrained: False
 

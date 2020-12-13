@@ -1,2 +1,3 @@
 from .resnet import ResNet
 from .vgg import VGG
+from .inception import Inception

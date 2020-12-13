@@ -120,7 +120,7 @@ python train.py --config ./configs/default.yml --eval
 
 ### Tensorboard
 ```bash
-tensorboard --logdir={log_dir} --port={your port}
+tensorboard --logdir={logdir} --port={your-port}
 ```
 
 ## Output of train and evaluation

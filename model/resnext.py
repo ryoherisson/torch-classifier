@@ -76,29 +76,26 @@ class ResNext(BaseModel):
         else:
             raise ValueError('This model name is not supported.')
 
-        LOG.info(' Model was successfully build.')
-
-    def _set_model_parameters(self):
-        """Sets model parameters"""
         # CPU or GPU(single, multi)
         self.device = setup_device(self.n_gpus)
         self.model = self.model.to(self.device)
-        if self.n_gpus > 1:
+        if self.n_gpus >= 2:
             self.model = data_parallel(self.model)
 
-        # optimizer and criterion
-        self.optimizer = make_optimizer(self.model, self.config.train.optimizer)
-        self.criterion = make_criterion(self.config.train.criterion)
+        LOG.info(' Model was successfully build.')
 
     def _set_training_parameters(self):
         """Sets training parameters"""
         self.epochs = self.config.train.epochs
         self.save_ckpt_interval = self.config.train.save_ckpt_interval
 
+        # optimizer and criterion
+        self.optimizer = make_optimizer(self.model, self.config.train.optimizer)
+        self.criterion = make_criterion(self.config.train.criterion)
+
     def train(self):
         """Compiles and trains the model"""
         LOG.info('\n Training started.')
-        self._set_model_parameters()
         self._set_training_parameters()
         
         # load checkpoint
@@ -128,7 +125,7 @@ class ResNext(BaseModel):
         """Predicts resuts for the test dataset"""
         LOG.info('\n Prediction started...')
 
-        self._set_model_parameters()
+        self._set_training_parameters()
 
         # load checkpoint
         if self.resume:

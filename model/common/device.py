@@ -8,7 +8,7 @@ LOG = get_logger(__name__)
 
 def setup_device(n_gpus: int):
     """ Setup GPU or CPU """
-    if n_gpus > 0 and torch.cuda.is_available():
+    if n_gpus >= 1 and torch.cuda.is_available():
         LOG.info('\n CUDA is available! using GPU...')
         return torch.device('cuda')
     else:

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Inception model"""
+import torch.nn as nn
 import torchvision.models as models
 
 from utils.paths import Paths
@@ -67,12 +68,12 @@ class Inception(BaseModel):
     def build(self):
         """ Builds model """
         LOG.info(f'\n Building {self.model_name.upper()}...')
-        kwargs = {'num_classes': self.n_classes}
         pretrained = self.config.model.pretrained
 
         if self.model_name == 'inception_v3':
             #TODO: aux_logits=False => True ?
-            self.model = models.inception_v3(pretrained=pretrained, **kwargs)
+            self.model = models.inception_v3(pretrained=pretrained, aux_logits=False)
+            self.model.fc = nn.Linear(in_features=2048, out_features=self.n_classes, bias=True)
         else:
             raise ValueError('This model name is not supported.')
 
@@ -86,12 +87,14 @@ class Inception(BaseModel):
         if self.n_gpus > 1:
             self.model = data_parallel(self.model)
 
+        # optimizer and criterion
+        self.optimizer = make_optimizer(self.model, self.config.train.optimizer)
+        self.criterion = make_criterion(self.config.train.criterion)
+
     def _set_training_parameters(self):
         """Sets training parameters"""
         self.epochs = self.config.train.epochs
         self.save_ckpt_interval = self.config.train.save_ckpt_interval
-        self.optimizer = make_optimizer(self.model, self.config.train.optimizer)
-        self.criterion = make_criterion(self.config.train.criterion)
 
     def train(self):
         """Compiles and trains the model"""
@@ -139,8 +142,8 @@ class Inception(BaseModel):
             'model': self.model,
             'dataloaders': (self.trainloader, self.testloader),
             'epochs': None,
-            'optimizer': None,
-            'criterion': None,
+            'optimizer': self.optimizer,
+            'criterion': self.criterion,
             'metrics': self.metrics,
             'save_ckpt_interval': None,
             'ckpt_dir': self.paths.ckpt_dir,

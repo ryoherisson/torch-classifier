@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """ResNet model"""
+import torch.nn as nn
 import torchvision.models as models
 
 from utils.paths import Paths
@@ -64,19 +65,23 @@ class ResNet(BaseModel):
     def build(self):
         """ Builds model """
         LOG.info(f'\n Building {self.model_name.upper()}...')
-        kwargs = {'num_classes': self.n_classes}
         pretrained = self.config.model.pretrained
 
         if self.model_name == 'resnet18':
-            self.model = models.resnet18(pretrained=pretrained, **kwargs)
+            self.model = models.resnet18(pretrained=pretrained)
+            self.model.fc = nn.Linear(in_features=512, out_features=self.n_classes, bias=True)
         elif self.model_name == 'resnet34':
-            self.model = models.resnet34(pretrained=pretrained, **kwargs)
+            self.model = models.resnet34(pretrained=pretrained)
+            self.model.fc = nn.Linear(in_features=512, out_features=self.n_classes, bias=True)
         elif self.model_name == 'resnet50':
-            self.model = models.resnet50(pretrained=pretrained, **kwargs)
+            self.model = models.resnet50(pretrained=pretrained)
+            self.model.fc = nn.Linear(in_features=2048, out_features=self.n_classes, bias=True)
         elif self.model_name == 'resnet101':
-            self.model = models.resnet101(pretrained=pretrained, **kwargs)
+            self.model = models.resnet101(pretrained=pretrained)
+            self.model.fc = nn.Linear(in_features=2048, out_features=self.n_classes, bias=True)
         elif self.model_name == 'resnet152':
-            self.model = models.resnet152(pretrained=pretrained, **kwargs)
+            self.model = models.resnet152(pretrained=pretrained)
+            self.model.fc = nn.Linear(in_features=2048, out_features=self.n_classes, bias=True)
         else:
             raise ValueError('This model name is not supported.')
 
@@ -90,12 +95,14 @@ class ResNet(BaseModel):
         if self.n_gpus > 1:
             self.model = data_parallel(self.model)
 
+        # optimizer and criterion
+        self.optimizer = make_optimizer(self.model, self.config.train.optimizer)
+        self.criterion = make_criterion(self.config.train.criterion)
+
     def _set_training_parameters(self):
         """Sets training parameters"""
         self.epochs = self.config.train.epochs
         self.save_ckpt_interval = self.config.train.save_ckpt_interval
-        self.optimizer = make_optimizer(self.model, self.config.train.optimizer)
-        self.criterion = make_criterion(self.config.train.criterion)
 
     def train(self):
         """Compiles and trains the model"""
@@ -143,8 +150,8 @@ class ResNet(BaseModel):
             'model': self.model,
             'dataloaders': (self.trainloader, self.testloader),
             'epochs': None,
-            'optimizer': None,
-            'criterion': None,
+            'optimizer': self.optimizer,
+            'criterion': self.criterion,
             'metrics': self.metrics,
             'save_ckpt_interval': None,
             'ckpt_dir': self.paths.ckpt_dir,

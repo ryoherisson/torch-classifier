@@ -62,7 +62,7 @@ class Metric:
 
         # plot confusion matrix
         if mode == 'eval':
-            cmx_path = self.metric_dir / 'test_cmx.png'
+            cmx_path = self.metric_dir / 'eval_cmx.png'
             plot_cmx(self.cmx.clone().numpy(), self.classes, cmx_path)
 
     def reset_states(self):

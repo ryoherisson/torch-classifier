@@ -110,12 +110,17 @@ An example of a dataset can be found in the dataset folder.
 
 ### Train
 ```bash
-$ python train.py --config ./configs/default.yml
+python train.py --config ./configs/default.yml
 ```
 
 ### Evaluation
 ```bash
-$ python train.py --config ./configs/default.yml --eval
+python train.py --config ./configs/default.yml --eval
+```
+
+### Tensorboard
+```bash
+tensorboard --logdir={log_dir} --port={your port}
 ```
 
 ## Output of train and evaluation

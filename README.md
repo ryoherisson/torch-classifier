@@ -1,4 +1,4 @@
-# classification-pytorch
+# torch-classifier
 This is a pytorch implementation of Classification in pytorch.  
 You can use the models from the list belows:
 - ResNet
@@ -99,7 +99,7 @@ datasets/
 
 The content of the csv file should have the following structure.
 ```bash
-filename,     label
+filename,label
 airplane1.png,0
 car1.png,1
 cat1.png,3
@@ -115,7 +115,7 @@ $ python train.py --config ./configs/default.yml
 
 ### Evaluation
 ```bash
-$ python main.py --config ./configs/default.yml --eval
+$ python train.py --config ./configs/default.yml --eval
 ```
 
 ## Output of train and evaluation

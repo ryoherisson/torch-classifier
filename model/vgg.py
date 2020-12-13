@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """VGG model"""
+import torch.nn as nn
 import torchvision.models as models
 
 from utils.paths import Paths
@@ -64,17 +65,20 @@ class VGG(BaseModel):
     def build(self):
         """ Builds model """
         LOG.info(f'\n Building {self.model_name.upper()}...')
-        kwargs = {'num_classes': self.n_classes}
         pretrained = self.config.model.pretrained
 
         if self.model_name == 'vgg11':
-            self.model = models.vgg11(pretrained=pretrained, **kwargs)
+            self.model = models.vgg11(pretrained=pretrained)
+            self.model.classifier[6] = nn.Linear(in_features=4096, out_features=self.n_classes, bias=True)
         elif self.model_name == 'vgg13':
-            self.model = models.vgg13(pretrained=pretrained, **kwargs)
+            self.model = models.vgg13(pretrained=pretrained)
+            self.model.classifier[6] = nn.Linear(in_features=4096, out_features=self.n_classes, bias=True)
         elif self.model_name == 'vgg16':
-            self.model = models.vgg16(pretrained=pretrained, **kwargs)
+            self.model = models.vgg16(pretrained=pretrained)
+            self.model.classifier[6] = nn.Linear(in_features=4096, out_features=self.n_classes, bias=True)
         elif self.model_name == 'vgg19':
-            self.model = models.vgg19(pretrained=pretrained, **kwargs)
+            self.model = models.vgg19(pretrained=pretrained)
+            self.model.classifier[6] = nn.Linear(in_features=4096, out_features=self.n_classes, bias=True)
         else:
             raise ValueError('This model name is not supported.')
 
@@ -88,12 +92,14 @@ class VGG(BaseModel):
         if self.n_gpus > 1:
             self.model = data_parallel(self.model)
 
+        # optimizer and criterion
+        self.optimizer = make_optimizer(self.model, self.config.train.optimizer)
+        self.criterion = make_criterion(self.config.train.criterion)
+
     def _set_training_parameters(self):
         """Sets training parameters"""
         self.epochs = self.config.train.epochs
         self.save_ckpt_interval = self.config.train.save_ckpt_interval
-        self.optimizer = make_optimizer(self.model, self.config.train.optimizer)
-        self.criterion = make_criterion(self.config.train.criterion)
 
     def train(self):
         """Compiles and trains the model"""
@@ -141,8 +147,8 @@ class VGG(BaseModel):
             'model': self.model,
             'dataloaders': (self.trainloader, self.testloader),
             'epochs': None,
-            'optimizer': None,
-            'criterion': None,
+            'optimizer': self.optimizer,
+            'criterion': self.criterion,
             'metrics': self.metrics,
             'save_ckpt_interval': None,
             'ckpt_dir': self.paths.ckpt_dir,

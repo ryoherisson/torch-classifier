@@ -81,6 +81,11 @@ class VGG(BaseModel):
         else:
             raise ValueError('This model name is not supported.')
 
+        # Load checkpoint
+        if self.resume:
+            ckpt = load_ckpt(self.resume)
+            self.model.load_state_dict(ckpt['model_state_dict'])
+
         # CPU or GPU(single, multi)
         self.device = setup_device(self.n_gpus)
         self.model = self.model.to(self.device)
@@ -98,18 +103,14 @@ class VGG(BaseModel):
         self.optimizer = make_optimizer(self.model, self.config.train.optimizer)
         self.criterion = make_criterion(self.config.train.criterion)
 
+        # metric
+        self.metric = Metric(self.n_classes, self.classes, self.paths.metric_dir)
+
     def train(self):
         """Compiles and trains the model"""
         LOG.info('\n Training started.')
         self._set_training_parameters()
         
-        # load checkpoint
-        if self.resume:
-            LOG.info('\n Loading checkpoint...')
-            self.model = load_ckpt(self.model, self.resume)            
-
-        self.metrics = Metric(self.n_classes, self.classes, self.paths.metric_dir)
-
         train_parameters = {
             'device': self.device,
             'model': self.model,
@@ -117,7 +118,7 @@ class VGG(BaseModel):
             'epochs': self.epochs,
             'optimizer': self.optimizer,
             'criterion': self.criterion,
-            'metrics': self.metrics,
+            'metrics': self.metric,
             'save_ckpt_interval': self.save_ckpt_interval,
             'ckpt_dir': self.paths.ckpt_dir,
             'summary_dir': self.paths.summary_dir,
@@ -129,14 +130,7 @@ class VGG(BaseModel):
     def evaluate(self):
         """Predicts resuts for the test dataset"""
         LOG.info('\n Prediction started...')
-
         self._set_training_parameters()
-
-        # load checkpoint
-        if self.resume:
-            self.model = load_ckpt(self.model, self.resume)            
-
-        self.metrics = Metric(self.n_classes, self.classes, self.paths.metric_dir)
 
         eval_parameters = {
             'device': self.device,

@@ -3,9 +3,9 @@ from pathlib import Path
 
 import torch
 
-def load_ckpt(model: object, resume: str):
+def load_ckpt(resume: str):
     """Loads Checkpoint"""
     if not Path(resume).exists():
         raise ValueError(' No checkpoint found !')
     ckpt = torch.load(resume)
-    return model.load_state_dict(ckpt['model_state_dict'])
+    return ckpt

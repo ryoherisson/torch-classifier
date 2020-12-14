@@ -6,6 +6,10 @@ You can use the models from the list belows:
 - Inception
 - MobileNet
 - ResNext
+  
+(Reference)  
+- Code structure: [https://github.com/The-AI-Summer/Deep-Learning-In-Production](https://github.com/The-AI-Summer/Deep-Learning-In-Production)
+- App: [https://github.com/jalalmansoori19/Cat-Classifier](https://github.com/jalalmansoori19/Cat-Classifier)
 
 ## Installation
 1. Install docker. See [Install Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu/).

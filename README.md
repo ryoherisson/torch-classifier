@@ -31,12 +31,6 @@ docker build \
 docker run -it --gpus {your-device} -v /home/{user}/torch-classifier:/workspace -p {outer-port}:{inner-port} --name {container-name} {your-image-name}
 ```
 
-5. Install packages
-```bash
-cd /workspace
-make install
-```
-
 ## Usage
 Create a configuration file based on configs/default.yml.
 ```bash

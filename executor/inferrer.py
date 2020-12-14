@@ -62,7 +62,8 @@ class Inferrer:
         tensor_image = tensor_image.to(self.device)
         output = self.model.model(tensor_image)
         pred = output.argmax(axis=1)
+        
         label = pred.cpu().detach().clone()[0].item()
-        prob = output[0][label].cpu().detach().clone()[0].item()
+        prob = output[0].cpu().detach().clone()[label].item()
 
         return {'label': label, 'prob': prob}

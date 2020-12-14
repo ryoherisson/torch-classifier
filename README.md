@@ -11,6 +11,9 @@ This repository includes:
 - Training and Evaluation Codes
 - Streamlit Classification Application
 
+Streamlit Classification Application
+![app](docs/images/app.png)
+
 ## Installation
 1. Install docker. See [Install Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu/).
 
@@ -131,6 +134,7 @@ Run tensorboard
 docker run --rm -it -v /{your-logdir}:/logs -p 6006:6006 tensorboard
 ```
 Access localhost:6006
+![tensorboard](docs/images/tensorboard.png)
 
 ### Streamlit Application
 ```bash
@@ -168,3 +172,4 @@ epoch,train loss,train accuracy,train precision,train recall,train micro f1score
 You will get loss, accuracy, precision, recall, micro f1score during training and as a result of evaluation.
 
 The content of eval_cmx.png is a confusion matrix.
+![eval_cmx](docs/images/eval_cmx.png)

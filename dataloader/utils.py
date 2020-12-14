@@ -5,14 +5,14 @@ from pathlib import Path
 import pandas as pd
 
 
-def make_data_list(dataroot: str, labelroot: str):
+def make_data_list(dataroot: str, labelpath: str):
     """Make data list from dataroot and labelroot
 
     Parameters
     ----------
     dataroot : str
         a path to the image directory
-    labelroot : str
+    labelpath : str
         a path to the csv file of labels
 
     Returns
@@ -22,7 +22,7 @@ def make_data_list(dataroot: str, labelroot: str):
         lbl_list: e.g. [3, 5, ...]
     """
     # read csv as dataframe
-    df = pd.read_csv(labelroot)
+    df = pd.read_csv(labelpath)
     
     # image path list
     filename_list = df['image'].values.tolist()

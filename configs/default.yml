@@ -2,8 +2,11 @@
 
 # Data Configs
 data:
-  dataroot: ./data/sample/images/
-  labelroot: 
+  dataroot: 
+    train: ./data/sample/images/
+    val: ./data/sample/images/
+    test: ./data/sample/images/
+  labelpath: 
     train: ./data/sample/labels/train.csv
     val: ./data/sample/labels/test.csv
     test: ./data/sample/labels/test.csv
@@ -33,7 +36,7 @@ model:
   name: resnet18
   n_classes: 10
   pretrained: False
-  resume:
+  resume: ./logs/2020-12-14T10:29:24.691392/ckpt/best_acc_ckpt.pth
     # e.g) resume: ./logs/2020-07-26T00:19:34.918002/ckpt/best_acc_ckpt.pth if resume. Blank if not resume
 
 # Other Configs

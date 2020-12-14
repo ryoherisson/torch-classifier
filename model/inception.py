@@ -50,18 +50,18 @@ class Inception(BaseModel):
         if not eval:
             # train data
             LOG.info(f' Train data...')
-            self.train_img_list, self.train_lbl_list = DataLoader().load_data(self.config.data.dataroot, self.config.data.labelroot.train)
+            self.train_img_list, self.train_lbl_list = DataLoader().load_data(self.config.data.dataroot.train, self.config.data.labelpath.train)
             self.trainloader = DataLoader().preprocess_data(self.config.data, self.train_img_list, self.train_lbl_list, self.batch_size, 'train')
 
             # val data
             LOG.info(f' Validation data...')
-            self.val_img_list, self.val_lbl_list = DataLoader().load_data(self.config.data.dataroot, self.config.data.labelroot.val)
+            self.val_img_list, self.val_lbl_list = DataLoader().load_data(self.config.data.dataroot.val, self.config.data.labelpath.val)
             self.valloader = DataLoader().preprocess_data(self.config.data, self.val_img_list, self.val_lbl_list, self.batch_size, 'eval')
         
         # evaluation
         if eval:
             LOG.info(f' Test data...')
-            self.test_img_list, self.test_lbl_list = DataLoader().load_data(self.config.data.dataroot, self.config.data.labelroot.test)
+            self.test_img_list, self.test_lbl_list = DataLoader().load_data(self.config.data.dataroot.test, self.config.data.labelpath.test)
             self.testloader = DataLoader().preprocess_data(self.config.data, self.test_img_list, self.test_lbl_list, self.batch_size, 'eval')
 
     def _set_logging(self):

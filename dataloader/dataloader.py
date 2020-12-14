@@ -14,15 +14,15 @@ class DataLoader:
     """Data Loader class"""
 
     @staticmethod
-    def load_data(dataroot: str, labelroot: str):
+    def load_data(dataroot: str, labelpath: str):
         """load dataset from path
 
         Parameters
         ----------
         dataroot : str
             path to the image data directory e.g. './data/images/'
-        labelroot : str
-            path to the label csv e.g. './data/labels/train.csv/'
+        labelpath : str
+            path to the label csv e.g. './data/labels/train.csv'
 
         Returns
         -------
@@ -30,7 +30,7 @@ class DataLoader:
             img_list: e.g. ['./data/images/car1.png', './data/images/dog4.png', ...]
             lbl_list: e.g. [3, 5, ...]
         """
-        img_list, lbl_list = make_data_list(dataroot, labelroot)
+        img_list, lbl_list = make_data_list(dataroot, labelpath)
         return (img_list, lbl_list)
 
     @staticmethod
@@ -71,8 +71,8 @@ class DataLoader:
 
         # dataloader
         if mode == 'train':
-            return data.DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=4)
+            return data.DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=2)
         elif mode == 'eval':
-            return data.DataLoader(dataset, batch_size=batch_size, shuffle=False, num_workers=4)
+            return data.DataLoader(dataset, batch_size=batch_size, shuffle=False, num_workers=2)
         else:
             raise ValueError('the mode should be train or eval. this mode is not supported')

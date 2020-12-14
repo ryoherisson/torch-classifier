@@ -54,5 +54,5 @@ if st.sidebar.button('Click Here to Classify'):
 
         class_name = inferrer.classes[results['label']]
         st.sidebar.write(f"Model: {inferrer.model_name.upper()}\n")
-        st.sidebar.write(f"'{class_name.capitalize()}' picture\n")
+        st.sidebar.write(f"Class: '{class_name.capitalize()}'\n")
         st.sidebar.write(f"Probability: {probability}%")

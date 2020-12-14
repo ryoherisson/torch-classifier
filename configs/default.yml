@@ -36,7 +36,7 @@ model:
   name: resnet18
   n_classes: 10
   pretrained: False
-  resume:
+  resume: 
     # e.g) resume: ./logs/2020-07-26T00:19:34.918002/ckpt/best_acc_ckpt.pth if resume. Blank if not resume
 
 # Other Configs

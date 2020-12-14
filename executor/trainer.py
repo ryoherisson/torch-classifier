@@ -72,6 +72,7 @@ class Trainer:
 
     def eval(self, epoch: int = 0):
         self.model.eval()
+        LOG.info('\n Evaluation:')
 
         with torch.no_grad():
             with tqdm(self.testloader, ncols=100) as pbar:

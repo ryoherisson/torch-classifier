@@ -1,31 +1,36 @@
 """App"""
-import argparse
+import os
+import glob
 
 import streamlit as st
 from PIL import Image
 
 from executor.inferrer import Inferrer
 
-@st.cache
-def build_inferrer():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--configfile', type=str, default='./configs/default.yml', help='config file')
-    args = parser.parse_args()
-    return Inferrer(args.configfile)
+def file_selector(folder_path='./configs'):
+    filenames = glob.glob(os.path.join(folder_path, '*.yml'))
+    selected_filepath = st.sidebar.selectbox('Select config file', filenames)
+    return selected_filepath
 
-inferrer = build_inferrer()
+def image_selector():
+    st.set_option('deprecation.showfileUploaderEncoding', False)
+    return st.sidebar.file_uploader(' ', type=['png', 'jpg', 'jpeg'])
 
 st.title("Image Classification App")
 st.write('\n')
 
+# show main image
 image = Image.open('./app/resources/image.png')
 show = st.image(image, use_column_width=True)
 
-st.sidebar.title('Upload Image')
-
-st.set_option('deprecation.showfileUploaderEncoding', False)
-uploaded_file = st.sidebar.file_uploader(' ', type=['png', 'jpg', 'jpeg'])
+# sidebar
+st.sidebar.title('Upload Config and Image')
+selected_path = file_selector()
+uploaded_file = image_selector()
 u_img = None
+
+if selected_path is not None:
+    inferrer = Inferrer(selected_path)
 
 if uploaded_file is not None:
     u_img = Image.open(uploaded_file)
@@ -33,17 +38,21 @@ if uploaded_file is not None:
 
 st.sidebar.write('\n')
 
+# Classify
 if st.sidebar.button('Click Here to Classify'):
-    if uploaded_file is None:
+    if selected_path is None:
+        st.sidebar.write('Please upload a Config file')
+    elif uploaded_file is None:
         st.sidebar.write('Please upload an Image to Classify')
     else:
         with st.spinner('Classifying..'):
             results = inferrer.infer(u_img)
             st.success('Done!')
 
-        st.sidebar.header('Algorithm Predicts: ')
+        st.sidebar.header('Predicts: ')
         probability = '{:.3f}'.format(results['prob'] * 100)
 
         class_name = inferrer.classes[results['label']]
-        st.sidebar.write(f"'{class_name.capitalize()}' picture.\n")
+        st.sidebar.write(f"Model: {inferrer.model_name.upper()}\n")
+        st.sidebar.write(f"'{class_name.capitalize()}' picture\n")
         st.sidebar.write(f"Probability: {probability}%")

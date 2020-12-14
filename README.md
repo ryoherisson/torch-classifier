@@ -126,6 +126,7 @@ tensorboard --logdir={logdir} --port={your-port}
 ```bash
 streamlit run app/app.py -- --configfile {your-config-path}
 ```
+Access localhost:8501 on your server.
 
 ## Output of train and evaluation
 You will see the following output in the log directory specified in the Config file.

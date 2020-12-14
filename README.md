@@ -25,7 +25,7 @@ cd torch-classifier
 docker build \ 
     --build-arg USER_ID=$(id -u) \
     --build-arg GROUP_ID=$(id -g) \
-    -f Dockerfile \
+    -f docker/Dockerfile \
     -t {your-image-name}  \
     .
 ```
@@ -122,9 +122,15 @@ python train.py --config ./configs/default.yml --eval
 ```
 
 ### Tensorboard
+Docker build
 ```bash
-tensorboard --logdir={logdir} --port={your-port}
+docker build -f ./docker/tensorboard.Dockerfile -t tensorboard .
 ```
+Run tensorboard
+```bash
+docker run --rm -it -v /{your-logdir}:/logs -p 6006:6006 tensorboard
+```
+Access localhost:6006
 
 ### Streamlit Application
 ```bash

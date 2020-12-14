@@ -129,8 +129,11 @@ tensorboard --logdir={logdir} --port={your-port}
 ### Streamlit Application
 ```bash
 streamlit run app/app.py -- --configfile {your-config-path}
+
+You can now view your Streamlit app in your browser.
+  Network URL: http://172.17.0.2:8501
+  External URL: http://113.33.218.178:8501
 ```
-Access localhost:8501 on your server.
 
 ## Output of train and evaluation
 You will see the following output in the log directory specified in the Config file.

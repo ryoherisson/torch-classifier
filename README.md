@@ -7,6 +7,10 @@ You can use the models from the list belows:
 - MobileNet
 - ResNext
 
+This repository includes:
+- Training and Evaluation Codes
+- Streamlit Classification Application
+
 ## Installation
 1. Install docker. See [Install Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu/).
 
@@ -122,7 +126,7 @@ python train.py --config ./configs/default.yml --eval
 tensorboard --logdir={logdir} --port={your-port}
 ```
 
-### app
+### Streamlit Application
 ```bash
 streamlit run app/app.py -- --configfile {your-config-path}
 ```

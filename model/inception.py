@@ -1,4 +1,6 @@
 """Inception model"""
+from typing import Dict
+
 import torch.nn as nn
 import torchvision.models as models
 
@@ -22,7 +24,7 @@ class Inception(BaseModel):
                so ensure your images are sized accordingly.
     """
 
-    def __init__(self, config):
+    def __init__(self, config: Dict):
         super().__init__(config)
         self.model = None
         self.model_name = self.config.model.name

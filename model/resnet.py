@@ -1,4 +1,6 @@
 """ResNet model"""
+from typing import Dict
+
 import torch.nn as nn
 import torchvision.models as models
 
@@ -19,7 +21,7 @@ LOG = get_logger(__name__)
 class ResNet(BaseModel):
     """ResNet Model Class"""
 
-    def __init__(self, config):
+    def __init__(self, config: Dict):
         super().__init__(config)
         self.model = None
         self.model_name = self.config.model.name

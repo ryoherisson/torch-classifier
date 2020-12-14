@@ -11,7 +11,7 @@ This repository includes:
 - Training and Evaluation Codes
 - Streamlit Classification Application
 
-Streamlit Classification Application
+**Streamlit Classification Application**
 ![app](docs/images/app.png)
 
 ## Installation

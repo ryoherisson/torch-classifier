@@ -18,6 +18,7 @@ class Inferrer:
         # Builds model
         self.model = get_model(config)
         self.model.build()
+        self.model_name = self.model.model_name
 
         # device
         if torch.cuda.is_available():
@@ -26,6 +27,9 @@ class Inferrer:
             self.device = torch.device('cpu')
         self.model.model.to(self.device)
         self.model.model.eval()
+
+        # classes
+        self.classes = self.model.classes
                 
     def preprocess(self, image):
         """Preprocess Image
@@ -48,8 +52,8 @@ class Inferrer:
 
         Returns
         -------
-        int
-            class label
+        dict :
+            prediction result label and probability
         """
         shape = image.size
 
@@ -58,6 +62,7 @@ class Inferrer:
         tensor_image = tensor_image.to(self.device)
         output = self.model.model(tensor_image)
         pred = output.argmax(axis=1)
-        pred = pred.cpu().detach().clone()[0].item()
+        label = pred.cpu().detach().clone()[0].item()
+        prob = output[0][label].cpu().detach().clone()[0].item()
 
-        return pred
+        return {'label': label, 'prob': prob}

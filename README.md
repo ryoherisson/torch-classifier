@@ -1,5 +1,5 @@
 # torch-classifier
-This is a pytorch implementation of Classification in pytorch.  
+This is a pytorch implementation of image classification in pytorch.  
 You can use the models from the list belows:
 - ResNet
 - VGG

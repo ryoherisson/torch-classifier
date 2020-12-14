@@ -17,3 +17,18 @@ RUN addgroup --gid $GROUP_ID duser && \
     echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 USER duser
 WORKDIR /home/duser/
+
+# streamlit
+RUN mkdir -p /root/.streamlit
+
+RUN bash -c 'echo -e "\
+[general]\n\
+email = \"\"\n\
+" > /root/.streamlit/credentials.toml'
+
+RUN bash -c 'echo -e "\
+[server]\n\
+enableCORS = false\n\
+" > /root/.streamlit/config.toml'
+
+EXPOSE 8501

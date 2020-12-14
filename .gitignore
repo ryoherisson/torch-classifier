@@ -1,0 +1,14 @@
+# pycache
+__pycache__
+
+# csv
+*.csv
+
+# data
+data
+
+# logs
+logs
+
+# vscode
+.vscode

@@ -1,5 +1,7 @@
 FROM nvidia/cuda:10.2-cudnn7-devel-ubuntu18.04
 
+ARG DEBIAN_FRONTEND=noninteractive
+
 RUN apt-get update
 RUN apt-get -y install python3
 RUN apt-get -y install python3-pip
@@ -20,15 +22,12 @@ WORKDIR /home/duser/
 
 # streamlit
 RUN mkdir -p /root/.streamlit
-
 RUN bash -c 'echo -e "\
 [general]\n\
 email = \"\"\n\
 " > /root/.streamlit/credentials.toml'
-
 RUN bash -c 'echo -e "\
 [server]\n\
 enableCORS = false\n\
 " > /root/.streamlit/config.toml'
-
 EXPOSE 8501

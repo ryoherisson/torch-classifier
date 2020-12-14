@@ -1,5 +1,5 @@
 # torch-classifier
-This is a pytorch implementation of Classification in pytorch.  
+This is a pytorch implementation of image classification in pytorch.  
 You can use the models from the list belows:
 - ResNet
 - VGG
@@ -28,13 +28,12 @@ docker build \
 
 4. Run docker container
 ```bash
-docker run -it --gpus {your-device} -v /home/{user}/torch-classifier:/workspace -p {outer-port}:{inner-port} --name {container-name} {your-image-name}
+docker run -it --gpus {your-device} -v /home/{user}/torch-classifier:/workspace -p 8501:8501 --name {container-name} {your-image-name}
 ```
 
-5. Install packages
+5. Setup
 ```bash
-cd /workspace
-make install
+python setup.py develop --user
 ```
 
 ## Usage
@@ -121,6 +120,11 @@ python train.py --config ./configs/default.yml --eval
 ### Tensorboard
 ```bash
 tensorboard --logdir={logdir} --port={your-port}
+```
+
+### app
+```bash
+streamlit run app/app.py -- --configfile {your-config-path}
 ```
 
 ## Output of train and evaluation

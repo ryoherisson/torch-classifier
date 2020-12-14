@@ -1,4 +1,6 @@
 """App"""
+import argparse
+
 import streamlit as st
 from PIL import Image
 
@@ -6,8 +8,10 @@ from executor.inferrer import Inferrer
 
 @st.cache
 def build_inferrer():
-    configfile = 'configs/default.yml'
-    return Inferrer(configfile)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--configfile', type=str, default='./configs/default.yml', help='config file')
+    args = parser.parse_args()
+    return Inferrer(args.configfile)
 
 inferrer = build_inferrer()
 

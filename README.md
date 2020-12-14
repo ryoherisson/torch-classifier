@@ -28,7 +28,12 @@ docker build \
 
 4. Run docker container
 ```bash
-docker run -it --gpus {your-device} -v /home/{user}/torch-classifier:/workspace -p {outer-port}:{inner-port} --name {container-name} {your-image-name}
+docker run -it --gpus {your-device} -v /home/{user}/torch-classifier:/workspace -p 8501:8501 --name {container-name} {your-image-name}
+```
+
+5. Setup
+```bash
+python setup.py develop --user
 ```
 
 ## Usage
@@ -115,6 +120,11 @@ python train.py --config ./configs/default.yml --eval
 ### Tensorboard
 ```bash
 tensorboard --logdir={logdir} --port={your-port}
+```
+
+### app
+```bash
+streamlit run app/app.py -- --configfile {your-config-path}
 ```
 
 ## Output of train and evaluation

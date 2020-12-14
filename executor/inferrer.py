@@ -1,4 +1,6 @@
 """Inferrer"""
+from typing import Dict
+import PIL
 
 import torch
 import torch.nn.functional as F
@@ -32,7 +34,7 @@ class Inferrer:
         # classes
         self.classes = self.model.classes
                 
-    def preprocess(self, image):
+    def preprocess(self, image: PIL.Image) -> torch.Tensor:
         """Preprocess Image
         PIL.Image to Tensor
         """
@@ -43,7 +45,7 @@ class Inferrer:
         image = transform(image).unsqueeze(0) # torch.Size([1, 3, img_size[0], img_size[1]])
         return image
 
-    def infer(self, image=None):
+    def infer(self, image: PIL.Image = None) -> Dict:
         """Infer an image
 
         Parameters

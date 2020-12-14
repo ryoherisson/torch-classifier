@@ -70,7 +70,7 @@ class Trainer:
                 best_acc = eval_acc
                 self._save_ckpt(epoch, mode='best')
 
-    def eval(self, epoch: int = 0):
+    def eval(self, epoch: int = 0) -> float:
         self.model.eval()
         LOG.info('\n Evaluation:')
 

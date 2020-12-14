@@ -12,7 +12,7 @@ class Paths:
         self.metric_dir = metric_dir
     
     @classmethod
-    def make_dirs(cls, logdir: str):
+    def make_dirs(cls, logdir: str) -> object:
         """Make log directory
 
         Parameters

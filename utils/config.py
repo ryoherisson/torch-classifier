@@ -13,7 +13,7 @@ class Config:
         self.util = util
 
     @classmethod
-    def from_json(cls, cfg: Dict):
+    def from_json(cls, cfg: Dict) -> object:
         """Creates config from json"""
         params = json.loads(json.dumps(cfg), object_hook=HelperObject)
         return cls(params.data, params.train, params.model, params.util)

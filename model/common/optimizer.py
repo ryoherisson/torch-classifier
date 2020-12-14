@@ -6,7 +6,7 @@ from utils.logger import get_logger
 
 LOG = get_logger(__name__)
 
-def make_optimizer(model: object, optimizer_cfg: object):
+def make_optimizer(model: object, optimizer_cfg: object) -> object:
     if optimizer_cfg.type == 'sgd':
         LOG.info('\n Optimizer: SGD')
         return optim.SGD(model.parameters(), 

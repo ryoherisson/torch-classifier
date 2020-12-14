@@ -1,6 +1,7 @@
 """Inferrer"""
 
 import torch
+import torch.nn.functional as F
 
 from utils.config import Config
 from utils.load import load_yaml
@@ -58,12 +59,13 @@ class Inferrer:
         shape = image.size
 
         tensor_image = self.preprocess(image)
-
-        tensor_image = tensor_image.to(self.device)
-        output = self.model.model(tensor_image)
-        pred = output.argmax(axis=1)
-        
-        label = pred.cpu().detach().clone()[0].item()
-        prob = output[0].cpu().detach().clone()[label].item()
+        with torch.no_grad():
+            tensor_image = tensor_image.to(self.device)
+            output = self.model.model(tensor_image)
+            output = F.softmax(output, dim=1)
+            pred = output.argmax(axis=1)
+            
+            label = pred.cpu().detach().clone()[0].item()
+            prob = output[0].cpu().detach().clone()[label].item()
 
         return {'label': label, 'prob': prob}

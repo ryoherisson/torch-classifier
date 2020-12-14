@@ -39,14 +39,12 @@ class Inception(BaseModel):
         self.valloader = None
         self.testloader = None
 
-        # paths
-        self.paths = Paths.make_dirs(self.config.util.logdir)
-    
-        # setup logger
-        setup_logger(str(self.paths.logdir / 'info.log'))
+        self.paths = None
 
     def load_data(self, eval: bool):
         """Loads and Preprocess data"""
+        self._set_logging()
+
         LOG.info(f'\nLoading {self.config.data.dataroot} dataset...')
         # train
         if not eval:
@@ -65,6 +63,11 @@ class Inception(BaseModel):
             LOG.info(f' Test data...')
             self.test_img_list, self.test_lbl_list = DataLoader().load_data(self.config.data.dataroot, self.config.data.labelroot.test)
             self.testloader = DataLoader().preprocess_data(self.config.data, self.test_img_list, self.test_lbl_list, self.batch_size, 'eval')
+
+    def _set_logging(self):
+        """Set logging"""
+        self.paths = Paths.make_dirs(self.config.util.logdir)
+        setup_logger(str(self.paths.logdir / 'info.log'))
 
     def build(self):
         """ Builds model """

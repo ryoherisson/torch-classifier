@@ -73,7 +73,6 @@ train:
   criterion:
     type: cross_entropy
   n_gpus: 1
-  metrics: ['accuracy', 'precision', 'recall', 'f1score']
   save_ckpt_interval: 10
 
 # Model Configs

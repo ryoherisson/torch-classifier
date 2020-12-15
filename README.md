@@ -75,14 +75,14 @@ train:
   n_gpus: 1
   metrics: ['accuracy', 'precision', 'recall', 'f1score']
   save_ckpt_interval: 10
-  resume:
-    # e.g) resume: ./logs/2020-07-26T00:19:34.918002/ckpt/best_acc_ckpt.pth if resume. Blank if not resume
 
 # Model Configs
 model:
   name: resnet18
   n_classes: 10
   pretrained: False
+  resume:
+    # e.g) resume: ./logs/2020-07-26T00:19:34.918002/ckpt/best_acc_ckpt.pth if resume. Blank if not resume
 
 # Other Configs
 util:

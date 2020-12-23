@@ -25,12 +25,7 @@ git clone https://github.com/ryoherisson/torch-classifier.git
 3. Build docker image
 ```bash
 cd torch-classifier
-docker build \ 
-    --build-arg USER_ID=$(id -u) \
-    --build-arg GROUP_ID=$(id -g) \
-    -f docker/Dockerfile \
-    -t {your-image-name}  \
-    .
+docker build --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) -f docker/Dockerfile -t {your-image-name} .
 ```
 
 4. Run docker container

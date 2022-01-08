@@ -1,5 +1,5 @@
 # torch-classifier
-This is a pytorch implementation of image classification in pytorch.  
+This is a pytorch implementation of image classification in pytorch.
 You can use the models from the list belows:
 - ResNet
 - VGG
@@ -46,7 +46,7 @@ Create a configuration file based on configs/default.yml.
 # Data Configs
 data:
   dataroot: ./data/sample/images/
-  labelroot: 
+  labelroot:
     train: ./data/sample/labels/train.csv
     val: ./data/sample/labels/test.csv
     test: ./data/sample/labels/test.csv

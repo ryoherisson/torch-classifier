@@ -20,13 +20,13 @@ COPY . /tmp/
 # streamlit
 RUN mkdir -p /root/.streamlit
 RUN bash -c 'echo -e "\
-[general]\n\
-email = \"\"\n\
-" > /root/.streamlit/credentials.toml'
+    [general]\n\
+    email = \"\"\n\
+    " > /root/.streamlit/credentials.toml'
 RUN bash -c 'echo -e "\
-[server]\n\
-enableCORS = false\n\
-" > /root/.streamlit/config.toml'
+    [server]\n\
+    enableCORS = false\n\
+    " > /root/.streamlit/config.toml'
 EXPOSE 8501
 
 # user setting

@@ -25,12 +25,13 @@ git clone https://github.com/ryoherisson/torch-classifier.git
 3. Build docker image
 ```bash
 cd torch-classifier
-docker build --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) -f docker/Dockerfile -t {your-image-name} .
+sh ./docker/build.sh
 ```
 
 4. Run docker container
 ```bash
-docker run -it --gpus {your-device} -v /home/{user}/torch-classifier:/workspace -p 8501:8501 --name {container-name} {your-image-name}
+sh ./docker/run.sh
+cd /workspace
 ```
 
 5. Setup
@@ -121,11 +122,11 @@ python train.py --config ./configs/default.yml --eval
 ### Tensorboard
 Docker build
 ```bash
-docker build -f ./docker/tensorboard.Dockerfile -t tensorboard .
+sh docker/tensorboard_build.sh
 ```
 Run tensorboard
 ```bash
-docker run --rm -it -v /{your-logdir}:/logs -p 6006:6006 tensorboard
+sh docker/tensorboard_run.sh
 ```
 Access localhost:6006
 ![tensorboard](docs/images/tensorboard.png)

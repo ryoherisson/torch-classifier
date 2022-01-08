@@ -23,9 +23,9 @@ def make_data_list(dataroot: str, labelpath: str):
     """
     # read csv as dataframe
     df = pd.read_csv(labelpath)
-    
+
     # image path list
-    filename_list = df['image'].values.tolist()
+    filename_list = df['filename'].values.tolist()
     img_list = [Path(dataroot) / filename for filename in filename_list]
 
     # label list
